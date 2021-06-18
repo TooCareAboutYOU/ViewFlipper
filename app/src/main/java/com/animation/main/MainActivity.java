@@ -3,7 +3,6 @@ package com.animation.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -14,14 +13,11 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.util.Objects;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends Activity implements View.OnTouchListener {
 
@@ -36,42 +32,41 @@ public class MainActivity extends Activity implements View.OnTouchListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        myViewFlipper= (ViewFlipper) findViewById(R.id.myViewFlipper);
+        myViewFlipper = findViewById(R.id.myViewFlipper);
 
         myViewFlipper.setOnTouchListener(this);
         mDetetor=new GestureDetector(new simpleGestureListener());
 
-
-        btnStart= (Button) findViewById(R.id.btn_start);
+        btnStart = findViewById(R.id.btn_start);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                myViewFlipper.startFlipping();
                 startThreadPool();
-                Toast.makeText(MainActivity.this, "开始", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "开始", Toast.LENGTH_SHORT)
+                        .show();
             }
         });
 
-
-        btnStop= (Button) findViewById(R.id.btn_stop);
+        btnStop = findViewById(R.id.btn_stop);
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                myViewFlipper.stopFlipping();
                 stopThreadPool();
-                Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_SHORT)
+                        .show();
             }
         });
 
-        btnOn= (Button) findViewById(R.id.btn_on);
+        btnOn = findViewById(R.id.btn_on);
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 myViewFlipper.showPrevious();
             }
         });
-        btnNext= (Button) findViewById(R.id.btn_next);
+        btnNext = findViewById(R.id.btn_next);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,12 +157,12 @@ public class MainActivity extends Activity implements View.OnTouchListener {
         }
     }
 
-    public class ThreadPoolProxy{
+    public class ThreadPoolProxy {
 
         private ThreadPoolExecutor mPoolExecutor;
-        private int mCorePoolSize; //线程池维护线程的最少数量
-        private int mMaximumPoolSize; //线程池维护线程的最大数量
-        private long mKeepAliveTime; // 线程池维护线程所允许的空闲时间
+        private final int mCorePoolSize; //线程池维护线程的最少数量
+        private final int mMaximumPoolSize; //线程池维护线程的最大数量
+        private final long mKeepAliveTime; // 线程池维护线程所允许的空闲时间
 
         public ThreadPoolProxy(int corePoolSize, int maximumPoolSize, long keepAliveTime) {
             mCorePoolSize = corePoolSize;
@@ -176,8 +171,8 @@ public class MainActivity extends Activity implements View.OnTouchListener {
         }
 
         //执行任务，当线程处于关闭，将会重新创建线程池
-        public synchronized void execute(Runnable runnable){
-            if (runnable ==null) {
+        public synchronized void execute(Runnable runnable) {
+            if (runnable == null) {
                 return;
             }
             if (mPoolExecutor ==null || mPoolExecutor.isShutdown()) {
